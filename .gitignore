@@ -1,0 +1,87 @@
+# =========================
+# Python & Virtual Environments
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env_venv/
+ENV/
+env.bak/
+venv.bak/
+
+# =========================
+# Environment Variables & Secrets
+# =========================
+.env
+.env.local
+.env.*
+*.pem
+
+# =========================
+# CrewAI & Database Artifacts
+# =========================
+# Ignore the generated JSON and Markdown reports
+artifacts/
+*.md
+!README.md
+!k8s/*.md
+!frontend/*.md
+!backend/*.md
+
+# ChromaDB / SQLite local vector storage
+*.sqlite3
+*.db
+chroma/
+vector_store/
+
+# =========================
+# Streamlit
+# =========================
+.streamlit/secrets.toml
+
+# =========================
+# Docker & Kubernetes
+# =========================
+.dockerignore
+# Do not ignore deployment files, but ignore local kubeconfigs if accidentally created
+kubeconfig
+*.kubeconfig
+
+# =========================
+# OS Generated Files
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+ehthumbs_vista.db
+[Tt]humbs.db
+
+
+.openclaude-profile.json
