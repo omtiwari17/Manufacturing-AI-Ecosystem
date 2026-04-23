@@ -36,7 +36,7 @@ jobs:
 
       - name: Update kubeconfig for EKS
         run: |
-          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name multi-agent-cluster
+          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name manufacturing-ai-ecosystem-cluster
 
       - name: Deploy to Kubernetes
         run: |
