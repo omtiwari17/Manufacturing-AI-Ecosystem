@@ -1,0 +1,36 @@
+# --- Core UI & Agent Framework ---
+streamlit==1.54.0
+crewai==1.9.3
+
+# --- AI & LLM Providers ---
+openai==1.83.0
+google-generativeai>=0.7.0
+google-genai==1.49.0
+litellm==1.75.3
+langchain-google-genai
+langchain-community
+groq==0.4.1
+
+# --- Data & Schema Validation ---
+pydantic==2.11.10
+pydantic-settings==2.10.1
+pandas==2.3.3
+numpy==1.26.4
+
+# --- Image Processing (GenAI UI) ---
+pillow>=10.0.0
+
+# --- File Parsing & Extractors ---
+pdfminer.six==20251230
+pdfplumber==0.11.9
+openpyxl==3.1.5
+aiofiles
+
+# --- General Utilities ---
+python-dotenv==1.1.1
+PyYAML==6.0.3
+rich==14.3.2
+requests==2.32.5
+tiktoken==0.12.0
+tenacity==9.1.4
+httpx==0.28.1
