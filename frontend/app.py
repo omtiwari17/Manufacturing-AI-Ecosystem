@@ -9,7 +9,7 @@ os.environ["OTEL_SDK_DISABLED"] = "true"
 logging.getLogger("LiteLLM").setLevel(logging.CRITICAL)
 
 import streamlit as st
-import google.genai as genai
+import google.generativeai as genai
 from urllib.parse import quote
 import requests
 from PIL import Image
@@ -94,7 +94,8 @@ with tab1:
             with st.spinner("Generating narrative..."):
                 try:
                     if use_gemini:
-                        client = genai.Client(api_key=gemini_key)
+                        genai.configure(api_key=gemini_key)
+                        model_gemini = genai.GenerativeModel("gemini-2.5-flash")
                         prompt = f"""You are a senior manufacturing engineer and technical writer.
 For the manufacturing concept: "{concept}"
 Write a structured technical description with these exact sections:
@@ -104,7 +105,7 @@ Write a structured technical description with these exact sections:
 4. **Manufacturing Application** — Industry use cases (2-3 sentences)
 5. **Advantages** — 3 key benefits in bullet points
 Keep it professional, concise, and educational. Total: ~200 words."""
-                        response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+                        response = model_gemini.generate_content(prompt)
                         narrative_text = response.text
                     else:
                         from groq import Groq
