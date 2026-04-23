@@ -128,6 +128,7 @@ Keep it professional, concise, and educational. Total: ~200 words."""
                         narrative_text = chat_completion.choices[0].message.content
                 except Exception as e:
                     st.error(f"Narrative Error: {e}")
+                    st.exception(e)
 
             # Generate image
             image_bytes = None
@@ -140,7 +141,7 @@ Keep it professional, concise, and educational. Total: ~200 words."""
                     image_bytes = resp.content
                 except Exception as e:
                     st.error(f"Image Error: {e}")
-
+                    st.exception(e)
             # Save everything to session state together
             if narrative_text:
                 st.session_state["tab1_narrative"] = narrative_text
