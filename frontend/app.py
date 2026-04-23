@@ -9,7 +9,6 @@ os.environ["OTEL_SDK_DISABLED"] = "true"
 logging.getLogger("LiteLLM").setLevel(logging.CRITICAL)
 
 import streamlit as st
-import google.generativeai as genai
 from urllib.parse import quote
 import requests
 from PIL import Image
@@ -94,6 +93,7 @@ with tab1:
             with st.spinner("Generating narrative..."):
                 try:
                     if use_gemini:
+                        import google.generativeai as genai
                         genai.configure(api_key=gemini_key)
                         model_gemini = genai.GenerativeModel("gemini-2.5-flash")
                         prompt = f"""You are a senior manufacturing engineer and technical writer.
