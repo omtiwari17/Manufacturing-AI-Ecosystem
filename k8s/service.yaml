@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: manufacturing-ai-ecosystem
+  labels:
+    app: manufacturing-ai-ecosystem
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+spec:
+  type: LoadBalancer
+  selector:
+    app: manufacturing-ai-ecosystem
+  ports:
+    - name: streamlit
+      protocol: TCP
+      port: 80
+      targetPort: 8501
+      nodePort: 30001

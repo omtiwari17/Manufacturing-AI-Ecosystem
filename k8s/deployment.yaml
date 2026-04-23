@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manufacturing-ai-ecosystem
+  labels:
+    app: manufacturing-ai-ecosystem
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: manufacturing-ai-ecosystem
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: manufacturing-ai-ecosystem
+    spec:
+      containers:
+        - name: manufacturing-ai-ecosystem
+          image: tiwariom/manufacturing-ai-ecosystem:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8501
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          readinessProbe:
+            httpGet:
+              path: /_stcore/health
+              port: 8501
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /_stcore/health
+              port: 8501
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            failureThreshold: 3
