@@ -4,9 +4,7 @@ crewai==1.9.3
 
 # --- AI & LLM Providers ---
 openai==1.83.0
-google-generativeai>=0.7.0
 litellm==1.75.3
-langchain-google-genai
 langchain-community
 groq>=0.9.0
 
