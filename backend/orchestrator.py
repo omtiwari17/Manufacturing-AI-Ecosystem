@@ -95,10 +95,17 @@ class Orchestrator:
         # Parse writer output (two-part)
         text = str(writer_out)
         if "===FINAL_JSON===" not in text or "===REPORT_MD===" not in text:
-            raise ValueError("Writer output missing required delimiters ===FINAL_JSON=== / ===REPORT_MD===")
-
-        final_part = text.split("===FINAL_JSON===")[1].split("===REPORT_MD===")[0].strip()
-        report_md = text.split("===REPORT_MD===")[1].strip()
+            # LLM didn't follow format — try to extract any JSON block
+            import re
+            json_match = re.search(r'\{.*\}', text, re.DOTALL)
+            if json_match:
+                final_part = json_match.group(0)
+                report_md = text.replace(final_part, "").strip()
+            else:
+                raise ValueError(f"Writer output missing delimiters. Raw output: {text[:500]}")
+        else:
+            final_part = text.split("===FINAL_JSON===")[1].split("===REPORT_MD===")[0].strip()
+            report_md = text.split("===REPORT_MD===")[1].strip()
 
 
         state = "FINAL_VALIDATION"

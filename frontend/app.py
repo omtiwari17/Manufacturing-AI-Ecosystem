@@ -93,9 +93,11 @@ with tab1:
             with st.spinner("Generating narrative..."):
                 try:
                     if use_gemini:
-                        import google.generativeai as genai
-                        genai.configure(api_key=gemini_key)
-                        model_gemini = genai.GenerativeModel("gemini-2.5-flash")
+                        from openai import OpenAI
+                        client = OpenAI(
+                            api_key=gemini_key,
+                            base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+                        )
                         prompt = f"""You are a senior manufacturing engineer and technical writer.
 For the manufacturing concept: "{concept}"
 Write a structured technical description with these exact sections:
@@ -105,8 +107,12 @@ Write a structured technical description with these exact sections:
 4. **Manufacturing Application** — Industry use cases (2-3 sentences)
 5. **Advantages** — 3 key benefits in bullet points
 Keep it professional, concise, and educational. Total: ~200 words."""
-                        response = model_gemini.generate_content(prompt)
-                        narrative_text = response.text
+                        response = client.chat.completions.create(
+                        model="gemini-2.5-flash",
+                        messages=[{"role": "user", "content": prompt}],
+                        max_tokens=1000,
+                        )
+                        narrative_text = response.choices[0].message.content
                     else:
                         from groq import Groq
                         client = Groq(api_key=groq_key)
