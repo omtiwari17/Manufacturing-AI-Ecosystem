@@ -20,7 +20,7 @@ from backend.tasks import research_task, write_task
 from backend.orchestrator import Orchestrator
 
 st.set_page_config(page_title="Manufacturing Hub", page_icon="🏭", layout="wide")
-st.title("Unified Manufacturing System")
+st.title("Manufacturing AI Ecosystem")
 
 with st.sidebar:
     st.markdown("## ⚙️ Settings")
@@ -114,8 +114,19 @@ Keep it professional, concise, and educational. Total: ~200 words."""
                         )
                         narrative_text = chat_completion.choices[0].message.content
                 except Exception as e:
-                    st.error(f"Narrative Error: {e}")
-                    st.exception(e)
+                    err = str(e)
+                    if "429" in err or "Too Many Requests" in err:
+                        st.warning("⚠️ API Rate Limit Reached")
+                        st.info("The AI provider has temporarily blocked requests because the free quota was exceeded. **This is not an app error** — please wait a minute and try again, or switch to the other AI model.")
+                    elif "401" in err or "403" in err or "API key" in err.lower() or "invalid" in err.lower():
+                        st.warning("⚠️ Invalid API Key")
+                        st.info("The API key was rejected by the provider. **This is not an app error** — please double-check your key in the sidebar and try again.")
+                    elif "timeout" in err.lower() or "timed out" in err.lower():
+                        st.warning("⚠️ Request Timed Out")
+                        st.info("The AI provider took too long to respond. **This is not an app error** — this usually fixes itself. Please try again.")
+                    else:
+                        st.warning("⚠️ AI Provider Error")
+                        st.info(f"The API returned an unexpected error. **This is not an app error** — it is coming from the AI provider's servers.\n\n`{err}`")
 
             image_bytes = None
             with st.spinner("Generating image..."):
@@ -126,7 +137,9 @@ Keep it professional, concise, and educational. Total: ~200 words."""
                     resp = requests.get(img_url, timeout=60)
                     image_bytes = resp.content
                 except Exception as e:
-                    st.error(f"Image Error: {e}")
+                    err = str(e)
+                    st.warning("⚠️ Image Generation Unavailable")
+                    st.info(f"The image service returned an error. **This is not an app error** — the visual prototype could not be generated this time. Try again in a moment.\n\n`{err}`")
 
             if narrative_text:
                 st.session_state["tab1_narrative"] = narrative_text
@@ -199,8 +212,19 @@ with tab2:
                     st.session_state["tab2_run_id"] = result['run_id']
 
                 except Exception as e:
-                    st.error(f"Agent Pipeline Error: {e}")
-                    st.exception(e)
+                    err = str(e)
+                    if "429" in err or "Too Many Requests" in err:
+                        st.warning("⚠️ API Rate Limit Reached")
+                        st.info("The Groq API has temporarily blocked requests because the free quota was exceeded. **This is not an app error** — please wait a minute and try again.")
+                    elif "401" in err or "403" in err or "API key" in err.lower() or "invalid" in err.lower():
+                        st.warning("⚠️ Invalid Groq API Key")
+                        st.info("The Groq API key was rejected. **This is not an app error** — please check your key at console.groq.com and re-enter it in the sidebar.")
+                    elif "timeout" in err.lower() or "timed out" in err.lower():
+                        st.warning("⚠️ Request Timed Out")
+                        st.info("The agent took too long to get a response from Groq. **This is not an app error** — please try again.")
+                    else:
+                        st.warning("⚠️ AI Provider Error")
+                        st.info(f"The API returned an unexpected error. **This is not an app error** — it is coming from Groq's servers.\n\n`{err}`")
 
     if st.session_state.get("tab2_report"):
         st.success(f"✅ Research Complete! Run ID: {st.session_state.get('tab2_run_id', '')}")
