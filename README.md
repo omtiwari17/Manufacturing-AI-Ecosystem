@@ -1,79 +1,113 @@
-# Manufacturing AI Creator
-### Integrated GenAI + Agentic AI + DevOps Ecosystem
+# Manufacturing AI Ecosystem 🏭
 
-A single production-grade app that combines multi-agent AI, multimodal generation, and Kubernetes deployment built as the capstone integration for the Datagami Skill Based Course.
-
----
-
-## What it does
-
-1. **User describes a manufacturing requirement**
-2. **Three CrewAI agents** run sequentially Requirements Analyst → Process Engineer → QA Specialist and produce a structured manufacturing spec
-3. **Spec auto-pipes into the Multimodal Creator** Gemini writes a professional narrative, Imagen 3 on Vertex AI generates a product visual
-4. **Everything is stored in ChromaDB** for retrieval
-5. **The whole app runs on AWS EKS** via a GitHub Actions CI/CD pipeline with zero-downtime rolling updates
+A unified manufacturing intelligence platform integrating multimodal GenAI for concept design, Agentic AI for supplier research, and a fully automated DevOps pipeline to AWS EKS.
 
 ---
 
-## Tech Stack
+## 🎯 What it does
+
+**Tab 1 — Multimodal GenAI Creator**
+Enter a manufacturing concept to instantly generate a structured technical narrative (powered by Groq's lightning-fast Llama 3) alongside an AI-generated visual prototype (powered by Flux via Pollinations.ai). 
+
+**Tab 2 — Agentic Sourcing System**
+A two-agent CrewAI pipeline (Researcher + Writer) that takes a sourcing query, finds and scores real-world suppliers, and produces a ranked markdown report alongside a structured JSON artifact.
+
+---
+
+## 🛠️ Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Agentic AI | CrewAI, Gemini 1.5 Flash |
-| Generative AI | Gemini 1.5 Flash (narrative), Imagen 3 via Vertex AI (image) |
-| Vector DB | ChromaDB (embedded) |
-| Frontend | Streamlit |
-| Containerisation | Docker |
-| Orchestration | Kubernetes (AWS EKS, `multi-agent-cluster`, `ap-south-1`) |
-| CI/CD | GitHub Actions |
-| Image Registry | Docker Hub (`tiwariom/manufacturing-ai-creator`) |
+| **Frontend** | Streamlit |
+| **LLM Engine** | Google Gemini 2.5 Flash, Groq Llama 3.3 70B |
+| **Image Generation** | Flux (via Pollinations.ai) |
+| **Agent Framework** | CrewAI |
+| **Containerization** | Docker |
+| **Orchestration** | Kubernetes (AWS EKS) |
+| **CI/CD** | GitHub Actions |
 
 ---
 
-## Run locally
-
-```bash
-pip install -r requirements.txt
-streamlit run app.py
-```
-
-Enter your Gemini API key, GCP Project ID, and (optionally) a Service Account JSON in the sidebar. The app works without the SA JSON image generation will be skipped but everything else runs.
-
----
-
-## GitHub Secrets required
-
-Add these in **Settings → Secrets → Actions**:
-
-| Secret | Value |
-|---|---|
-| `DOCKER_USERNAME` | `tiwariom` |
-| `DOCKER_PASSWORD` | Docker Hub access token |
-| `AWS_ACCESS_KEY_ID` | AWS IAM key |
-| `AWS_SECRET_ACCESS_KEY` | AWS IAM secret |
-
----
-
-## Repository structure
+## 📁 Project Structure
 
 ```
 Manufacturing-AI-Ecosystem/
-├── app.py                        # Main Streamlit app
-├── requirements.txt
-├── Dockerfile
-├── .streamlit/
-│   └── config.toml
+├── frontend/
+│   └── app.py
+├── backend/
+│   ├── agents.py
+│   ├── tasks.py
+│   ├── orchestrator.py
+│   ├── schemas.py
+│   └── storage.py
 ├── k8s/
-│   ├── deployment.yaml           # K8s Deployment (2 replicas, rolling update)
-│   └── service.yaml              # K8s LoadBalancer Service
-└── .github/
-    └── workflows/
-        └── ci-cd.yml             # GitHub Actions CI/CD
+│   ├── deployment.yaml
+│   └── service.yaml
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
+├── artifacts/
+├── Dockerfile
+├── requirements.txt
+└── eks-setup.ps1
 ```
 
 ---
 
-## Group Members
+## 💻 Running Locally
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/omtiwari17/Manufacturing-AI-Ecosystem.git
+   cd Manufacturing-AI-Ecosystem
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Launch the application:**
+   ```bash
+   python -m streamlit run frontend/app.py
+   ```
+
+4. **Add your API Keys:**
+   When the UI loads in your browser, enter your keys in the sidebar:
+   * **Gemini API Key:** Required for Tab 1 (Get it free at [aistudio.google.com](https://aistudio.google.com))
+   * **Groq API Key:** Required for Tab 1 & Tab 2 (Get it free at [console.groq.com](https://console.groq.com))
+
+---
+
+## 🚀 AWS EKS Deployment
+
+This application is configured for fully automated, zero-downtime deployments to Amazon Elastic Kubernetes Service (EKS).
+
+### 1. Provision the Cluster (One-Time Setup)
+Ensure you have the AWS CLI installed and configured (`aws configure`). Then, run the provisioning script to build the cluster and configure the necessary IAM roles:
+```powershell
+.\eks-setup.ps1
+```
+
+### 2. Configure GitHub Secrets
+Add the following repository secrets in GitHub (`Settings -> Secrets and variables -> Actions`):
+* `DOCKER_USERNAME` *(Your Docker Hub username)*
+* `DOCKER_PASSWORD` *(Your Docker Hub Personal Access Token)*
+* `AWS_ACCESS_KEY_ID` *(From AWS IAM)*
+* `AWS_SECRET_ACCESS_KEY` *(From AWS IAM)*
+* `AWS_REGION` *(e.g., ap-south-1)*
+
+### 3. Trigger Deployment
+Any code pushed to the `main` branch will automatically trigger the GitHub Actions pipeline. The pipeline will build a new Docker image, push it to Docker Hub, and execute a rolling update on the EKS cluster.
+```bash
+git add .
+git commit -m "Deploying unified ecosystem"
+git push origin main
+```
+
+---
+
+## 👥 Group Members
 
 | Sr No | Name | Enrollment Number |
 |---|---|---|
