@@ -15,7 +15,7 @@ pandas==2.3.3
 numpy==1.26.4
 
 # --- Image Processing (GenAI UI) ---
-pillow>=10.0.0
+pillow==10.4.0
 
 # --- File Parsing & Extractors ---
 pdfminer.six==20251230
